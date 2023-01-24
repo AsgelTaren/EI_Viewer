@@ -26,6 +26,8 @@ public class ControllerManager implements Runnable {
 		List<Controller> gamepads = Arrays.stream(ControllerEnvironment.getDefaultEnvironment().getControllers())
 				.filter(controller -> controller.getType().equals(Controller.Type.GAMEPAD))
 				.collect(Collectors.toList());
+		if (gamepads.size() == 0)
+			return;
 		Controller gamepad = gamepads.get(0);
 
 		Event event;
@@ -41,14 +43,29 @@ public class ControllerManager implements Runnable {
 			while (eq.getNextEvent(event)) {
 				component = event.getComponent();
 				value = event.getValue();
-				if (component.getIdentifier() == Identifier.Axis.X && component.getDeadZone() < Math.abs(value)) {
-					app.solids.get(2).ry = 150 * value;
+				if (component.getIdentifier() == Identifier.Axis.X) {
+					app.x = value;
 				}
-				if (component.getIdentifier() == Identifier.Axis.RX && component.getDeadZone() < Math.abs(value)) {
-					app.solids.get(1).rx = 150 * value;
+				if (component.getIdentifier() == Identifier.Axis.Y) {
+					app.rx = value;
 				}
-				if (component.getIdentifier() == Identifier.Axis.Z && component.getDeadZone() < Math.abs(value)) {
-					app.solids.get(2).ry = 150 * value;
+				if (component.getIdentifier() == Identifier.Axis.RX) {
+					app.betaIn = value;
+				}
+				if (component.getIdentifier() == Identifier.Axis.RY) {
+					app.alphaIn = value;
+				}
+				if (Math.abs(app.x) < 0.3) {
+					app.x = 0;
+				}
+				if (Math.abs(app.rx) < 0.3) {
+					app.rx = 0;
+				}
+				if (Math.abs(app.alphaIn) < 0.3) {
+					app.alphaIn = 0;
+				}
+				if (Math.abs(app.betaIn) < 0.3) {
+					app.betaIn = 0;
 				}
 			}
 		}

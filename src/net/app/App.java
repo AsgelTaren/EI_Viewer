@@ -29,13 +29,26 @@ public class App implements GLEventListener, KeyListener, MouseWheelListener, Mo
 	public float alpha, beta, zoom = 1.0f;
 	private float lastX, lastY;
 
+	public float x, rx, alphaIn,betaIn;
+
 	private GLU glu = new GLU();
 
 	public App() {
 		this.solids = new ArrayList<Solid>();
-		solids.add(CustomModel.getBasis(2, 1));
-		solids.add(CustomModel.getPiece1(1, 2, 3, 4, 2));
-		solids.add(CustomModel.getArc(2, 3, 1, 10, 3, 4));
+		float a = 1;
+		float b = 2;
+		float l1 = 3;
+		float l2 = 4;
+		float r1 = 2;
+		float r2 = 3;
+		float basisSize = 2;
+		float elevatorSize = 1f;
+		float elevatorHeight = 0.5f;
+		solids.add(CustomModel.getBasis(basisSize, a));
+		solids.add(CustomModel.getPiece1(a, b, l1, l2, basisSize));
+		solids.add(CustomModel.getArc(r1, r2, a, 10, l1, l2));
+		solids.add(CustomModel.getElevator(elevatorSize, elevatorHeight, a, r1, r2));
+		solids.add(CustomModel.getElevator2(elevatorSize, elevatorHeight, elevatorHeight, r1, r2));
 	}
 
 	@Override
@@ -67,6 +80,19 @@ public class App implements GLEventListener, KeyListener, MouseWheelListener, Mo
 		gl.glRotatef(alpha, 1, 0, 0);
 		gl.glRotatef(beta, 0, 0, 1);
 
+		solids.get(2).ry += x * 6;
+		solids.get(1).rx += rx * 6;
+		
+		alpha += alphaIn * 6;
+		beta += betaIn * 6;
+
+		if (solids.get(2).ry < -90) {
+			solids.get(2).ry = -90;
+		}
+		if (solids.get(2).ry > 90) {
+			solids.get(2).ry = 90;
+		}
+
 		for (Solid solid : solids) {
 			solid.render(drawable);
 		}
@@ -84,7 +110,7 @@ public class App implements GLEventListener, KeyListener, MouseWheelListener, Mo
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 
-		glu.gluPerspective(45.0f, h, 0.5, 20.0);
+		gl.glOrtho(-10, 10, -10 / h, 10 / h, -5, 10);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}

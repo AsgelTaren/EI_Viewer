@@ -49,52 +49,29 @@ public class CustomModel {
 				l2 - a / 2, (l1 - a) / 2, -b / 2, // 38
 				l2 - a / 2, (l1 - a) / 2, b / 2, // 39
 		};
-		float[] colors = new float[] { // Specifying all colors
-				1, 0, 0, // 0 -> 0
-				1, 0, 0, // 0 -> 1
-				1, 0, 0, // 0 -> 2
-				1, 0, 0, // 0 -> 3
-				0, 1, 0, // 1 -> 0
-				0, 1, 0, // 1 -> 1
-				0, 1, 0, // 1 -> 2
-				0, 1, 0, // 1 -> 3
-				0, 0, 1, // 2 -> 0
-				0, 0, 1, // 2 -> 1
-				0, 0, 1, // 2 -> 2
-				0, 0, 1, // 2 -> 3
-				1, 0, 1, // 3 -> 0
-				1, 0, 1, // 3 -> 1
-				1, 0, 1, // 3 -> 2
-				1, 0, 1, // 3 -> 3
-				1, 1, 0, // 4 -> 0
-				1, 1, 0, // 4 -> 1
-				1, 1, 0, // 4 -> 2
-				1, 1, 0, // 4 -> 3
-				0, 0, 1, // 5 -> 0
-				0, 0, 1, // 5 -> 1
-				0, 0, 1, // 5 -> 2
-				0, 0, 1, // 5 -> 3
-				0, 1, 0, // 6 -> 0
-				0, 1, 0, // 6 -> 1
-				0, 1, 0, // 6 -> 2
-				0, 1, 0, // 6 -> 3
-				1, 0, 0, // 7 -> 0
-				1, 0, 0, // 7 -> 1
-				1, 0, 0, // 7 -> 2
-				1, 0, 0, // 7 -> 3
-				1, 0, 0, // 8 -> 0
-				1, 0, 0, // 8 -> 1
-				1, 0, 0, // 8 -> 2
-				1, 0, 0, // 8 -> 3
-				0, 0, 1, // 9 -> 0
-				0, 0, 1, // 9 -> 1
-				0, 0, 1, // 9 -> 2
-				0, 0, 1, // 9 -> 3
-		};
-		return new Solid(vertices, colors, size + a / 2, 0, 0);
+		Color c1 = new Color(69, 255, 208);
+		Color c2 = new Color(44, 171, 139);
+		Color c3 = new Color(0, 189, 141);
+		ArrayList<Color> colorList = new ArrayList<>();
+		colorList.add(c3);
+		colorList.add(c2);
+		colorList.add(c1);
+		colorList.add(c3);
+		colorList.add(c2);
+		colorList.add(c1);
+		colorList.add(c1);
+		colorList.add(c3);
+		colorList.add(c3);
+		colorList.add(c2);
+		return new Solid(vertices, getColorAsFloat(colorList), size/2 + a / 2, 0, 0);
 	}
 
 	public static Solid getArc(float r1, float r2, float a, int subdiv, float l1, float l2) {
+
+		Color border = new Color(122, 122, 122);
+		Color border2 = new Color(168, 168, 168);
+		Color end = new Color(99, 98, 98);
+
 		Point[] points = new Point[] { new Point(0, -a / 2, -r1), new Point(0, a / 2, -r1), new Point(0, a / 2, -r2),
 				new Point(0, -a / 2, -r2) };
 
@@ -102,42 +79,76 @@ public class CustomModel {
 		ArrayList<Color> colorList = new ArrayList<>();
 
 		pointList.addAll(Arrays.asList(points));
-		colorList.add(Color.RED);
+		colorList.add(end);
 
 		for (int i = 0; i < subdiv; i++) {
 			Point[] newPoints = Point.rotatePointsOnY(points, (float) Math.PI / subdiv);
 
 			pointList.addAll(Arrays.asList(new Point[] { points[0], newPoints[0], newPoints[1], points[1] })); // Up
 																												// face
-			colorList.add(Color.GREEN);
+			colorList.add(border2);
 
 			pointList.addAll(Arrays.asList(new Point[] { points[0], newPoints[0], newPoints[3], points[3] })); // Left
 																												// face
-			colorList.add(Color.BLUE);
+			colorList.add(border);
 
 			pointList.addAll(Arrays.asList(new Point[] { points[3], newPoints[3], newPoints[2], points[2] })); // Down
 																												// face
 
-			colorList.add(Color.GREEN);
+			colorList.add(border2);
 
 			pointList.addAll(Arrays.asList(new Point[] { points[2], newPoints[2], newPoints[1], points[1] })); // Right
 																												// face
-			colorList.add(Color.BLUE);
+			colorList.add(border);
 
 			points = newPoints;
 		}
 
 		pointList.addAll(Arrays.asList(points));
 
-		colorList.add(Color.RED);
+		colorList.add(end);
 
 		return new Solid(getVerticesFromPoints(pointList), getColorAsFloat(colorList), -a / 2 + l2 + r2, l1 / 2, 0);
 	}
 
 	public static Solid getBasis(float size, float a) {
-		Point[] points = new Point[] { new Point(size, size, size), new Point(size, size, -size),
-				new Point(size, -size, -size), new Point(size, -size, size), new Point(-size, size, size),
-				new Point(-size, size, -size), new Point(-size, -size, -size), new Point(-size, -size, size) };
+		Point[] points = new Point[] { new Point(0.5f*size, 0.5f*size, size), new Point(0.5f*size, 0.5f*size, -2*size),
+				new Point(0.5f*size, -0.5f*size, -2*size), new Point(0.5f*size, -0.5f*size, size), new Point(-0.5f*size, 0.5f*size, size),
+				new Point(-0.5f*size, 0.5f*size, -2*size), new Point(-0.5f*size, -0.5f*size, -2*size), new Point(-0.5f*size, -0.5f*size, size) };
+
+		ArrayList<Point> pointList = new ArrayList<>();
+		ArrayList<Color> colorList = new ArrayList<>();
+		
+		Color c1 = new Color(4, 204, 24);
+		Color c2 = new Color(0, 143, 14);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[0], points[1], points[2], points[3] }));
+		colorList.add(c1);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[7], points[4], points[5], points[6] }));
+		colorList.add(c1);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[0], points[3], points[7], points[4] }));
+		colorList.add(c2);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[1], points[2], points[6], points[5] }));
+		colorList.add(c2);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[7], points[3], points[2], points[6] }));
+		colorList.add(Color.GREEN);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[0], points[1], points[5], points[4] }));
+		colorList.add(Color.GREEN);
+
+		return new Solid(getVerticesFromPoints(pointList), getColorAsFloat(colorList), -size - a / 2, 0, 0);
+	}
+
+	public static Solid getElevator(float size, float height, float a, float r1, float r2) {
+		Point[] points = new Point[] { new Point(size, size, height), new Point(size, size, -height),
+				new Point(size, -size, -height), new Point(size, -size, height), new Point(-size, size, height),
+				new Point(-size, size, -height), new Point(-size, -size, -height), new Point(-size, -size, height) };
+		Color c1 = new Color(224, 2, 2);
+		Color c2 = new Color(179, 2, 2);
 
 		ArrayList<Point> pointList = new ArrayList<>();
 		ArrayList<Color> colorList = new ArrayList<>();
@@ -149,18 +160,49 @@ public class CustomModel {
 		colorList.add(Color.red);
 
 		pointList.addAll(Arrays.asList(new Point[] { points[0], points[3], points[7], points[4] }));
-		colorList.add(Color.BLUE);
+		colorList.add(c2);
 
 		pointList.addAll(Arrays.asList(new Point[] { points[1], points[2], points[6], points[5] }));
-		colorList.add(Color.BLUE);
+		colorList.add(c2);
 
 		pointList.addAll(Arrays.asList(new Point[] { points[7], points[3], points[2], points[6] }));
-		colorList.add(Color.GREEN);
+		colorList.add(c1);
 
 		pointList.addAll(Arrays.asList(new Point[] { points[0], points[1], points[5], points[4] }));
-		colorList.add(Color.GREEN);
+		colorList.add(c1);
 
-		return new Solid(getVerticesFromPoints(pointList), getColorAsFloat(colorList), -size - a / 2, 0, 0);
+		return new Solid(getVerticesFromPoints(pointList), getColorAsFloat(colorList), 0, -size - a / 2, (r1 + r2) / 2);
+	}
+	
+	public static Solid getElevator2(float size, float height, float a, float r1, float r2) {
+		Point[] points = new Point[] { new Point(size, size, height), new Point(size, size, -height),
+				new Point(size, -size, -height), new Point(size, -size, height), new Point(-size, size, height),
+				new Point(-size, size, -height), new Point(-size, -size, -height), new Point(-size, -size, height) };
+		Color c1 = new Color(224, 2, 2);
+		Color c2 = new Color(179, 2, 2);
+
+		ArrayList<Point> pointList = new ArrayList<>();
+		ArrayList<Color> colorList = new ArrayList<>();
+
+		pointList.addAll(Arrays.asList(new Point[] { points[0], points[1], points[2], points[3] }));
+		colorList.add(Color.red);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[7], points[4], points[5], points[6] }));
+		colorList.add(Color.red);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[0], points[3], points[7], points[4] }));
+		colorList.add(c2);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[1], points[2], points[6], points[5] }));
+		colorList.add(c2);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[7], points[3], points[2], points[6] }));
+		colorList.add(c1);
+
+		pointList.addAll(Arrays.asList(new Point[] { points[0], points[1], points[5], points[4] }));
+		colorList.add(c1);
+
+		return new Solid(getVerticesFromPoints(pointList), getColorAsFloat(colorList), 0, 0, -(r1 + r2));
 	}
 
 	public static float[] getVerticesFromPoints(ArrayList<Point> points) {
